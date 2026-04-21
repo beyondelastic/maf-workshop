@@ -1,0 +1,37 @@
+site_name: Microsoft Agent Framework Workshop
+site_description: Beginner-friendly Microsoft Agent Framework workshop with official-documentation-based exercises.
+site_url: https://beyondelastic.github.io/maf-workshop/
+repo_name: maf-workshop
+repo_url: https://github.com/beyondelastic/maf-workshop
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep orange
+      accent: amber
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.footer
+    - content.code.copy
+    - content.action.edit
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - tables
+extra_css:
+  - assets/stylesheets/extra.css
+extra_javascript:
+  - assets/javascripts/external-links.js
+nav:
+  - Home: index.md
+  - 00 Prerequisites: 00-prereqs.md
+  - 01 Your First Agent: 01-your-first-agent.md
+  - 02 Conversations And Memory: 02-conversations-and-memory.md
+  - 03 Tools And Function Calling: 03-tools-and-function-calling.md
+  - 04 Your First Workflow: 04-your-first-workflow.md
+  - 05 Dynamic Orchestration: 05-dynamic-orchestration.md
+  - 06 Observability: 06-observability.md
+  - 07 DevUI: 07-devui.md

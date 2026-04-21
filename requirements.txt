@@ -1,0 +1,7 @@
+agent-framework>=1.0.0
+azure-identity>=1.17.0
+python-dotenv>=1.0.1
+opentelemetry-api>=1.25.0
+opentelemetry-sdk>=1.25.0
+mkdocs>=1.6.0
+mkdocs-material>=9.5.0
