@@ -48,7 +48,7 @@ practitioner to assess the case.
 
 ## The code
 
-File: `examples/05-orchestration/magentic_orchestration.py`
+File: [`examples/05-orchestration/magentic_orchestration.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/05-orchestration/magentic_orchestration.py)
 
 ```python
 import asyncio

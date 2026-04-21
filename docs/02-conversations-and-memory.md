@@ -22,7 +22,7 @@ state so the agent can build on earlier context.
 
 ## Example 1 — Multi-turn with AgentSession
 
-File: `examples/02-conversations/multi_turn.py`
+File: [`examples/02-conversations/multi_turn.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/02-conversations/multi_turn.py)
 
 ```python
 import asyncio
@@ -93,7 +93,7 @@ async def main() -> None:
 store and reload conversation messages **automatically**, add a history
 provider.
 
-File: `examples/02-conversations/memory_provider.py`
+File: [`examples/02-conversations/memory_provider.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/02-conversations/memory_provider.py)
 
 ```python
 from agent_framework import Agent, InMemoryHistoryProvider
@@ -164,8 +164,12 @@ class UserPreferenceProvider(ContextProvider):
             )
 ```
 
-This is an advanced pattern — the built-in `InMemoryHistoryProvider` is enough
-for most workshop scenarios.
+In this workshop we use `InMemoryHistoryProvider`, which stores history in
+memory for the duration of the script. In a real application you would swap it
+for a persistent provider (e.g. backed by a database) so the agent remembers
+conversations across sessions. Custom context providers like the example above
+let you inject any extra information — but that is beyond the scope of this
+workshop.
 
 ## Try it
 

@@ -43,7 +43,7 @@ We will build a **patient triage pipeline**:
 
 ## The code
 
-File: `examples/04-workflow/sequential_workflow.py`
+File: [`examples/04-workflow/sequential_workflow.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/04-workflow/sequential_workflow.py)
 
 ```python
 import asyncio

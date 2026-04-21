@@ -27,7 +27,7 @@ python --version
 ## Create a Microsoft Foundry project
 
 1. Go to the [Azure portal](https://portal.azure.com) and create an
-   **Azure AI Foundry** resource (or use an existing one).
+   **Microsoft Foundry** resource (or use an existing one).
 2. Inside the resource, create a **project**.
 3. Copy the **project endpoint** — it looks like:
    `https://<your-resource>.services.ai.azure.com/api/projects/<your-project>`
@@ -41,9 +41,10 @@ python --version
 Inside your Foundry project, deploy a model. This workshop recommends
 **gpt-5.4-mini** because it is fast and cost-effective for learning.
 
-1. Open your Foundry project in the Azure portal.
-2. Navigate to **Deployments** → **Deploy model**.
-3. Select `gpt-5.4-mini` and complete the deployment wizard.
+1. Open your project in [Microsoft Foundry](https://ai.azure.com/).
+2. Select **Build** in the top navigation, then **Models** in the left pane.
+3. Select **Deploy a base model**, choose `gpt-5.4-mini`, and complete the
+   deployment wizard.
 4. Note the **deployment name** — you will use it as `FOUNDRY_MODEL` in your
    `.env` file.
 

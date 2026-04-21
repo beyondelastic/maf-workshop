@@ -29,7 +29,7 @@ agents/
 
 ## The agent module
 
-File: `examples/07-devui/agents/health_bot/__init__.py`
+File: [`examples/07-devui/agents/health_bot/__init__.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/07-devui/agents/health_bot/__init__.py)
 
 ```python
 import os
@@ -76,7 +76,7 @@ agent = Agent(
 
 ## The launcher script
 
-File: `examples/07-devui/run_devui.py`
+File: [`examples/07-devui/run_devui.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/07-devui/run_devui.py)
 
 ```python
 import os

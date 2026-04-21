@@ -70,7 +70,7 @@ agent = Agent(
 
 ## Full example
 
-File: `examples/03-tools/function_tools.py`
+File: [`examples/03-tools/function_tools.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/03-tools/function_tools.py)
 
 ```python
 import asyncio

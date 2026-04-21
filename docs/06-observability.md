@@ -28,7 +28,7 @@ This example sets up a **console exporter** so you can see spans printed
 directly to the terminal. In production you would export to Azure Monitor,
 Jaeger, or another backend.
 
-File: `examples/06-observability/traced_agent.py`
+File: [`examples/06-observability/traced_agent.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/06-observability/traced_agent.py)
 
 ```python
 import asyncio

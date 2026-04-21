@@ -35,7 +35,7 @@ by changing only the client.
 
 ## The code
 
-Create the file `examples/01-first-agent/hello_agent.py`:
+Create the file [`examples/01-first-agent/hello_agent.py`](https://github.com/beyondelastic/maf-workshop/blob/main/examples/01-first-agent/hello_agent.py):
 
 ```python
 import asyncio

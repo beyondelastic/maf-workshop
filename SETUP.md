@@ -14,7 +14,7 @@ Before you begin, verify:
 
 Official references:
 
-- [Microsoft Foundry resource quickstart](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code)
+- [Set up Microsoft Foundry resources](https://learn.microsoft.com/azure/foundry/tutorials/quickstart-create-foundry-resources)
 - [Microsoft Agent Framework overview](https://learn.microsoft.com/en-us/agent-framework/overview/)
 
 ## 2. Local prerequisites
