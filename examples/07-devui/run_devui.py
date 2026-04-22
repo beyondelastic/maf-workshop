@@ -19,4 +19,4 @@ agents_dir = os.path.join(os.path.dirname(__file__), "agents")
 from agent_framework.devui import serve
 
 # serve() auto-discovers agent directories and starts a web server.
-serve(directory=agents_dir, port=8080, auto_open=True)
+serve(entities_dir=agents_dir, port=8080, auto_open=True, instrumentation_enabled=True)

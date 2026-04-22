@@ -14,7 +14,8 @@ package. It provides:
 - **Directory-based discovery** — agents are auto-discovered from a folder.
 - **Multi-turn conversations** — built-in session management.
 - **OpenAI-compatible API** — standard REST endpoints.
-- **Telemetry** — optional OpenTelemetry trace viewer.
+- **Tracing** — built-in OpenTelemetry trace viewer (enable with
+  `instrumentation_enabled=True`).
 
 ## Agent directory structure
 
@@ -88,8 +89,13 @@ agents_dir = os.path.join(os.path.dirname(__file__), "agents")
 
 from agent_framework.devui import serve
 
-serve(directory=agents_dir, port=8080, auto_open=True)
+serve(entities_dir=agents_dir, port=8080, auto_open=True, instrumentation_enabled=True)
 ```
+
+Setting `instrumentation_enabled=True` enables the built-in **trace viewer**
+inside DevUI. After you chat with an agent, click the **Traces** tab in the
+UI to see the full span timeline — LLM calls, tool invocations, and token
+usage — without needing an external collector.
 
 ## How to run it
 
@@ -164,6 +170,8 @@ Then try:
 - DevUI exposes an **OpenAI-compatible API** alongside the web UI.
 - It supports **multi-turn conversations** and **tool call inspection** out of
   the box.
+- Enable `instrumentation_enabled=True` for a **built-in trace viewer** —
+  no external collector needed.
 
 ## Official references
 

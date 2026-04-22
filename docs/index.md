@@ -51,14 +51,27 @@ consistent thread across all lessons.
 
 ## Quick start
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-az login
-cp .env.example .env   # fill in your values
-mkdocs serve
-```
+1. Clone the repository and set up the Python environment:
 
-Then open [http://127.0.0.1:8000](http://127.0.0.1:8000).
+    ```bash
+    git clone https://github.com/beyondelastic/maf-workshop.git
+    cd maf-workshop
+    python -m venv .venv && source .venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+2. Sign in to Azure:
+
+    ```bash
+    az login
+    ```
+
+3. Configure your environment variables:
+
+    ```bash
+    cp .env.example .env   # fill in your values
+    ```
+
+4. Follow the lessons on this site starting with [Prerequisites](00-prereqs.md).
 
 Full setup instructions are in [SETUP.md](https://github.com/beyondelastic/maf-workshop/blob/main/SETUP.md).
