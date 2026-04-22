@@ -21,15 +21,15 @@ This lesson focuses on **Magentic** — the most dynamic pattern.
 
 ## How Magentic works
 
-```
-                    ┌─────────────────┐
-  User message ──▶  │  Magentic       │
-                    │  Manager (LLM)  │
-                    └──┬────┬────┬────┘
-                       │    │    │
-          ┌────────────┘    │    └────────────┐
-          ▼                 ▼                 ▼
-  [Cardiologist]    [Neurologist]    [GeneralPractitioner]
+```mermaid
+flowchart TD
+    U["User message"] --> M["Magentic Manager (LLM)"]
+    M --> C["Cardiologist"]
+    M --> N["Neurologist"]
+    M --> GP["GeneralPractitioner"]
+    C --> M
+    N --> M
+    GP --> M
 ```
 
 1. The **manager** receives the user message and creates a plan.
@@ -99,13 +99,23 @@ async def main() -> None:
         ),
     )
 
-    # Build the Magentic orchestration
-    builder = MagenticBuilder()
-    builder.add_participant(cardiologist)
-    builder.add_participant(neurologist)
-    builder.add_participant(general_practitioner)
+    # Manager agent
+    manager = Agent(
+        client=client,
+        name="Manager",
+        instructions=(
+            "You coordinate a team of medical specialists. "
+            "Delegate tasks to the right specialist based on the patient's symptoms "
+            "and synthesise their responses into a final assessment."
+        ),
+    )
 
-    workflow = builder.build()
+    # Build the Magentic orchestration
+    workflow = MagenticBuilder(
+        participants=[cardiologist, neurologist, general_practitioner],
+        manager_agent=manager,
+        intermediate_outputs=True,
+    ).build()
 
     # Run with streaming
     patient_case = (
@@ -115,9 +125,14 @@ async def main() -> None:
     print(f"Patient case: {patient_case}\n")
     print("--- Orchestration output ---\n")
 
+    current_agent = None
     async for event in workflow.run(patient_case, stream=True):
-        if hasattr(event, "text") and event.text:
-            print(event.text, end="", flush=True)
+        if event.type == "output" and hasattr(event.data, "text") and event.data.text:
+            name = getattr(event.data, "author_name", None)
+            if name and name != current_agent:
+                current_agent = name
+                print(f"\n\n[{current_agent}]\n")
+            print(event.data.text, end="", flush=True)
     print()
 
 
@@ -135,26 +150,36 @@ the neurologist only neurological ones, and the GP provides a holistic summary.
 ### 2. Build with MagenticBuilder
 
 ```python
-builder = MagenticBuilder()
-builder.add_participant(cardiologist)
-builder.add_participant(neurologist)
-builder.add_participant(general_practitioner)
-workflow = builder.build()
+workflow = MagenticBuilder(
+    participants=[cardiologist, neurologist, general_practitioner],
+    manager_agent=manager,
+    intermediate_outputs=True,
+).build()
 ```
 
-`MagenticBuilder` creates an internal manager agent that plans and coordinates
-the participants. You do not need to define edges or routing logic — the
-manager handles it dynamically.
+`MagenticBuilder` takes a list of `participants` and a `manager_agent` that
+plans and coordinates them. You do not need to define edges or routing logic —
+the manager handles it dynamically. Setting `intermediate_outputs=True` enables
+streaming of each specialist's response as it is generated.
 
 ### 3. Stream the output
 
 ```python
+current_agent = None
 async for event in workflow.run(patient_case, stream=True):
-    if hasattr(event, "text") and event.text:
-        print(event.text, end="", flush=True)
+    if event.type == "output" and hasattr(event.data, "text") and event.data.text:
+        name = getattr(event.data, "author_name", None)
+        if name and name != current_agent:
+            current_agent = name
+            print(f"\n\n[{current_agent}]\n")
+        print(event.data.text, end="", flush=True)
 ```
 
-Streaming lets you see each specialist's contribution as it is generated.
+Each streaming chunk carries an `author_name` attribute that identifies which
+agent produced it. Tracking the current name lets you print a header whenever
+the active agent changes, so you can see contributions from each specialist.
+With `stream=True` and `intermediate_outputs=True`, tokens arrive as they are
+generated rather than waiting for the entire orchestration to complete.
 
 ## When to use which pattern
 

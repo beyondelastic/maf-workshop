@@ -1,6 +1,6 @@
 """Lesson 04 — Your First Workflow.
 
-A deterministic two-agent pipeline using executors and edges:
+A deterministic two-agent pipeline using WorkflowBuilder and edges:
   Agent 1 (TriageAgent)    → classifies a patient complaint by severity
   Agent 2 (RoutingAgent)   → recommends the appropriate hospital department
 
@@ -14,9 +14,8 @@ import os
 
 from dotenv import load_dotenv
 
-from agent_framework import Agent
+from agent_framework import Agent, WorkflowBuilder
 from agent_framework.foundry import FoundryChatClient
-from agent_framework.workflows import Workflow
 from azure.identity import AzureCliCredential
 
 load_dotenv()
@@ -54,14 +53,11 @@ async def main() -> None:
     )
 
     # --- Build the workflow ---------------------------------------------------
-    workflow = Workflow()
-
-    # Add agents as executors
-    workflow.add_executor("triage", triage_agent)
-    workflow.add_executor("routing", routing_agent)
-
-    # Connect them: triage output feeds into routing input
-    workflow.add_edge("triage", "routing")
+    workflow = (
+        WorkflowBuilder(start_executor=triage_agent)
+        .add_edge(triage_agent, routing_agent)
+        .build()
+    )
 
     # --- Run the workflow -----------------------------------------------------
     patient_complaint = "I have had a persistent headache for two weeks and occasional dizziness."
@@ -69,7 +65,11 @@ async def main() -> None:
 
     result = await workflow.run(patient_complaint)
 
-    print(f"Workflow result:\n{result}")
+    for event in result:
+        if event.type == "executor_completed":
+            for resp in event.data:
+                if hasattr(resp, "executor_id"):
+                    print(f"{resp.executor_id}: {resp.agent_response}\n")
 
 
 if __name__ == "__main__":

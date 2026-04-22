@@ -71,6 +71,16 @@ FOUNDRY_PROJECT_ENDPOINT=https://<your-resource>.services.ai.azure.com/api/proje
 FOUNDRY_MODEL=gpt-5.4-mini
 ```
 
+## VS Code extensions (optional)
+
+For **Lesson 06 (Observability)**, install the **AI Toolkit** extension in
+VS Code. It provides a visual trace viewer for OpenTelemetry spans emitted by
+your agents.
+
+1. Open the Extensions panel (`Ctrl+Shift+X`).
+2. Search for **AI Toolkit** ([ms-windows-ai-studio.windows-ai-studio](https://marketplace.visualstudio.com/items?itemName=ms-windows-ai-studio.windows-ai-studio)).
+3. Click **Install**.
+
 ## Verify your setup
 
 Run a quick check to make sure everything works:

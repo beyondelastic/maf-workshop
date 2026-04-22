@@ -51,9 +51,8 @@ import os
 
 from dotenv import load_dotenv
 
-from agent_framework import Agent
+from agent_framework import Agent, WorkflowBuilder
 from agent_framework.foundry import FoundryChatClient
-from agent_framework.workflows import Workflow
 from azure.identity import AzureCliCredential
 
 load_dotenv()
@@ -91,17 +90,23 @@ async def main() -> None:
     )
 
     # Build the workflow
-    workflow = Workflow()
-    workflow.add_executor("triage", triage_agent)
-    workflow.add_executor("routing", routing_agent)
-    workflow.add_edge("triage", "routing")
+    workflow = (
+        WorkflowBuilder(start_executor=triage_agent)
+        .add_edge(triage_agent, routing_agent)
+        .build()
+    )
 
     # Run
     patient_complaint = "I have had a persistent headache for two weeks and occasional dizziness."
     print(f"Patient complaint: {patient_complaint}\n")
 
     result = await workflow.run(patient_complaint)
-    print(f"Workflow result:\n{result}")
+
+    for event in result:
+        if event.type == "executor_completed":
+            for resp in event.data:
+                if hasattr(resp, "executor_id"):
+                    print(f"{resp.executor_id}: {resp.agent_response}\n")
 
 
 if __name__ == "__main__":
@@ -118,24 +123,35 @@ narrow helps the LLM produce predictable results.
 ### 2. Build the workflow graph
 
 ```python
-workflow = Workflow()
-workflow.add_executor("triage", triage_agent)
-workflow.add_executor("routing", routing_agent)
-workflow.add_edge("triage", "routing")
+workflow = (
+    WorkflowBuilder(start_executor=triage_agent)
+    .add_edge(triage_agent, routing_agent)
+    .build()
+)
 ```
 
-- `add_executor(name, agent_or_function)` registers a node.
-- `add_edge(source, target)` connects them. The output of `triage` becomes the
-  input of `routing`.
+- `WorkflowBuilder(start_executor=...)` creates the builder with the first
+  executor in the graph.
+- `add_edge(source, target)` connects two executors — the output of `triage_agent`
+  becomes the input of `routing_agent`.
+- `build()` validates the graph and returns an immutable `Workflow` instance.
 
 ### 3. Run the workflow
 
 ```python
 result = await workflow.run(patient_complaint)
+
+for event in result:
+    if event.type == "executor_completed":
+        for resp in event.data:
+            if hasattr(resp, "executor_id"):
+                print(f"{resp.executor_id}: {resp.agent_response}\n")
 ```
 
-The framework executes `triage` first, passes its output to `routing`, and
-returns the final result.
+The framework executes `triage_agent` first, passes its output to
+`routing_agent`, and returns a `WorkflowRunResult`. Iterating over the result
+gives you `WorkflowEvent` objects — filter for `executor_completed` events to
+get each agent's response along with its name via `executor_id`.
 
 ## What you can build from here
 

@@ -56,15 +56,25 @@ async def main() -> None:
         ),
     )
 
+    # --- Manager agent --------------------------------------------------------
+    manager = Agent(
+        client=client,
+        name="Manager",
+        instructions=(
+            "You coordinate a team of medical specialists. "
+            "Delegate tasks to the right specialist based on the patient's symptoms "
+            "and synthesise their responses into a final assessment."
+        ),
+    )
+
     # --- Build the Magentic orchestration ------------------------------------
-    builder = MagenticBuilder()
-    builder.add_participant(cardiologist)
-    builder.add_participant(neurologist)
-    builder.add_participant(general_practitioner)
+    workflow = MagenticBuilder(
+        participants=[cardiologist, neurologist, general_practitioner],
+        manager_agent=manager,
+        intermediate_outputs=True,
+    ).build()
 
-    workflow = builder.build()
-
-    # --- Run ------------------------------------------------------------------
+    # --- Run with streaming ---------------------------------------------------
     patient_case = (
         "A 55-year-old patient reports chest tightness, occasional headaches, "
         "and numbness in the left arm that started two weeks ago."
@@ -72,9 +82,14 @@ async def main() -> None:
     print(f"Patient case: {patient_case}\n")
     print("--- Orchestration output ---\n")
 
+    current_agent = None
     async for event in workflow.run(patient_case, stream=True):
-        if hasattr(event, "text") and event.text:
-            print(event.text, end="", flush=True)
+        if event.type == "output" and hasattr(event.data, "text") and event.data.text:
+            name = getattr(event.data, "author_name", None)
+            if name and name != current_agent:
+                current_agent = name
+                print(f"\n\n[{current_agent}]\n")
+            print(event.data.text, end="", flush=True)
     print()
 
 

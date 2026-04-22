@@ -12,22 +12,20 @@ import os
 
 from dotenv import load_dotenv
 
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor, ConsoleSpanExporter
-
 from agent_framework import Agent, tool
 from agent_framework.foundry import FoundryChatClient
+from agent_framework.observability import configure_otel_providers
 from azure.identity import AzureCliCredential
 
 load_dotenv()
 
 # ---------------------------------------------------------------------------
-# Set up OpenTelemetry tracing to print spans to the console
+# Set up OpenTelemetry tracing — sends traces to the AI Toolkit VS Code panel
 # ---------------------------------------------------------------------------
-provider = TracerProvider()
-provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
-trace.set_tracer_provider(provider)
+configure_otel_providers(
+    enable_console_exporters=False,
+    enable_sensitive_data=True,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -67,7 +65,7 @@ async def main() -> None:
     print("Asking TracedHealthBot about fatigue...\n")
     result = await agent.run("I have been feeling very fatigued lately. What could be causing it?")
     print(f"\nAgent: {result}")
-    print("\n(Check the console output above for OpenTelemetry trace spans.)")
+    print("\n(Open the AI Toolkit panel in VS Code to view the trace spans.)")
 
 
 if __name__ == "__main__":
